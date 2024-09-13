@@ -1,6 +1,7 @@
 package fixlib
 
 import (
+	"log"
 	"time"
 
 	//"github.com/beevik/guid"
@@ -14,7 +15,6 @@ import (
 	fix44osr "github.com/quickfixgo/fix44/orderstatusrequest"
 	fix44slr "github.com/quickfixgo/fix44/securitylistrequest"
 	fix44trq "github.com/quickfixgo/fix44/testrequest"
-	fix44tmr "github.com/quickfixgo/fix44/tradecapturereport"
 	"github.com/quickfixgo/quickfix"
 	"github.com/shopspring/decimal"
 )
@@ -22,7 +22,7 @@ import (
 const (
 	scale int32 = 2
 
-	accountSummaryReqType string = "UASQ"
+	// accountSummaryReqType string = "UASQ"
 )
 
 func queryOrigClOrdID() field.OrigClOrdIDField {
@@ -76,21 +76,24 @@ func queryHeader(h header, targetCompID, senderCompID string) {
 	//h.Set(queryTargetSubID())
 }
 
-func queryMsgType(val enum.MsgType) field.MsgTypeField {
-	return field.NewMsgType(val)
-}
+// Commented unused method
+// func queryMsgType(val enum.MsgType) field.MsgTypeField {
+// 	return field.NewMsgType(val)
+// }
 
 func queryBeginString() field.BeginStringField {
 	return field.NewBeginString("FIX.4.4")
 }
 
-func queryTargetSubID() field.TargetSubIDField {
-	return field.NewTargetSubID("5")
-}
+// Commented unused method
+// func queryTargetSubID() field.TargetSubIDField {
+// 	return field.NewTargetSubID("5")
+// }
 
-func queryRequestID(ID string) field.TestReqIDField {
-	return field.NewTestReqID(ID)
-}
+// Commented unused method
+// func queryRequestID(ID string) field.TestReqIDField {
+// 	return field.NewTestReqID(ID)
+// }
 
 func queryTransactTime() field.TransactTimeField {
 	return field.NewTransactTime(time.Now())
@@ -183,21 +186,22 @@ func queryOrderCancelRequest44(cloID, symbol, orderQty string,
 	cancel.Set(queryOrderQty(orderQty))
 
 	msg = cancel.ToMessage()
-	return quickfix.NewMessage()
+	return msg
 }
 
-func queryTradesCuptureRequest(tradeReportID, tradeData string, prevReportID bool,
-	lastQty, lastPX decimal.Decimal) (msg *quickfix.Message) {
-	query := fix44tmr.New(field.NewTradeReportID(tradeReportID),
-		field.NewPreviouslyReported(prevReportID),
-		field.NewLastQty(lastQty, scale),
-		field.NewLastPx(lastPX, scale),
-		field.NewTradeDate(tradeData),
-		queryTransactTime(),
-	)
-	msg = query.ToMessage()
-	return
-}
+// Commented unused method
+// func queryTradesCuptureRequest(tradeReportID, tradeData string, prevReportID bool,
+// 	lastQty, lastPX decimal.Decimal) (msg *quickfix.Message) {
+// 	query := fix44tmr.New(field.NewTradeReportID(tradeReportID),
+// 		field.NewPreviouslyReported(prevReportID),
+// 		field.NewLastQty(lastQty, scale),
+// 		field.NewLastPx(lastPX, scale),
+// 		field.NewTradeDate(tradeData),
+// 		queryTransactTime(),
+// 	)
+// 	msg = query.ToMessage()
+// 	return
+// }
 
 func querySecurityListSymbolRequest44(symbol, sendercompID, targetCompID string) (msg *quickfix.Message) {
 	reqID := field.NewSecurityReqID(generateReqID())
@@ -342,13 +346,14 @@ func queryReplaceOrder44(origClo, cloID string,
 		queryOrdType(ordType),
 	)
 	msg = replace.ToMessage()
-	return quickfix.NewMessage()
+	return msg
 }
 
 // ModifyMsg ...
 func ModifyMsg(msg *quickfix.Message) {
 	var msgType quickfix.FIXString
 	if err := msg.Header.GetField(35, &msgType); err != nil {
+		log.Printf("Error (ModifyMsg): %s", err.Error())
 	}
 	if msgType == "A" {
 		msg.Header.SetField(554, quickfix.FIXString("Bs3CHeEMSk"))
