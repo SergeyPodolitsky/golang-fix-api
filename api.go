@@ -29,9 +29,9 @@ func (f FixAPI) send(msg *quickfix.Message) (err error) {
 }
 
 // NewOrder request FIX44
-func (f FixAPI) NewOrder(symbol, orderQty, account, price, stopPx, 
-	sendercompID, targetCompID string,ordType enum.OrdType) error {
-	return f.send(queryNewOrderSingle44(symbol, orderQty, account, price, 
+func (f FixAPI) NewOrder(symbol, orderQty, account, price, stopPx,
+	sendercompID, targetCompID string, ordType enum.OrdType) error {
+	return f.send(queryNewOrderSingle44(symbol, orderQty, account, price,
 		stopPx, sendercompID, targetCompID, ordType))
 }
 
@@ -84,7 +84,7 @@ func (f FixAPI) SecurityListCFI(cfi, sendercompID, targetCompID string,
 
 // TradesCapture request 44
 func (f FixAPI) TradesCapture(sendercompID, targetCompID string,
-		startTime, stopTime time.Time) error {
+	startTime, stopTime time.Time) error {
 	return f.send(queryTradesCapture44(
 		sendercompID, targetCompID, startTime, stopTime))
 }
@@ -112,9 +112,9 @@ func (f FixAPI) TestRequest(requestID string) error {
 }
 
 // MarketData ...
-func (f FixAPI) MarketData(marketDepth int, symbol, sendercompID,targetCompID string) error {
+func (f FixAPI) MarketData(marketDepth int, symbol, sendercompID, targetCompID string) error {
 	return f.send(queryMarketDataRequest44(marketDepth, sendercompID, symbol,
-		targetCompID ))
+		targetCompID))
 }
 
 // NewFixAPI constructor
