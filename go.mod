@@ -1,4 +1,4 @@
-module module github.com/integration/golang-fix-api
+module github.com/SergeyPodolitsky/golang-fix-api
 
 go 1.14
 
